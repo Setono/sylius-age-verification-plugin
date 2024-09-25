@@ -1,0 +1,6 @@
+setono_sylius_age_verification:
+    form:
+        product:
+            minimum_age: Minimum age
+    ui:
+        age_verification: Age verification
