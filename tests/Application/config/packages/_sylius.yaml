@@ -13,3 +13,9 @@ sylius_shop:
 
 sylius_api:
     enabled: true
+
+sylius_product:
+    resources:
+        product:
+            classes:
+                model: Setono\SyliusAgeVerificationPlugin\Tests\Application\Model\Product
