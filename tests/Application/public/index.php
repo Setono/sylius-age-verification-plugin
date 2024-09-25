@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Acme\SyliusExamplePlugin\Tests\Application\Kernel;
+use Setono\SyliusAgeVerificationPlugin\Tests\Application\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

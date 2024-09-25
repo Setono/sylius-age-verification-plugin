@@ -1,0 +1,2 @@
+setono_sylius_age_verification:
+    resource: "@SetonoSyliusAgeVerificationPlugin/Resources/config/routes.yaml"
