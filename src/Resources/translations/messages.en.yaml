@@ -2,5 +2,6 @@ setono_sylius_age_verification:
     form:
         product:
             minimum_age: Minimum age
+            minimum_age_help: The minimum age required to purchase this product
     ui:
         age_verification: Age verification

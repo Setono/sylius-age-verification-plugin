@@ -15,6 +15,7 @@ final class ProductTypeExtension extends AbstractTypeExtension
     {
         $builder->add('minimumAge', IntegerType::class, [
             'label' => 'setono_sylius_age_verification.form.product.minimum_age',
+            'help' => 'setono_sylius_age_verification.form.product.minimum_age_help',
             'required' => false,
         ]);
     }
