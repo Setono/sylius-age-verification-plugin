@@ -6,6 +6,31 @@
 [![Code Coverage][ico-code-coverage]][link-code-coverage]
 [![Mutation testing][ico-infection]][link-infection]
 
+A plugin to add age verification to your Sylius store. Right now the plugin only works with [Criipto](https://www.criipto.com/) as the age verification provider.
+
+## Installation
+
+```bash
+composer require setono/sylius-age-verification-plugin
+```
+
+Add plugin to your `config/bundles.php` file:
+
+```php
+return [
+    // ...
+    Setono\SyliusAgeVerificationPlugin\SetonoSyliusAgeVerificationPlugin::class => ['all' => true],
+    // ...
+];
+```
+
+## Extend entities
+
+### Extend `Customer` entity
+
+### Extend `Product` entity
+
+
 
 [ico-version]: https://poser.pugx.org/setono/sylius-age-verification-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-age-verification-plugin/license

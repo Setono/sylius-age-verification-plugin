@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Setono\SyliusAgeVerificationPlugin\Tests\Application;
 
+use Setono\SyliusAgeVerificationPlugin\Controller\CriiptoCallbackAction;
+use Setono\SyliusAgeVerificationPlugin\Tests\Application\UrlGenerator\DummyUrlGenerator;
+use Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -12,6 +18,31 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 final class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
+
+    protected function build(ContainerBuilder $container): void
+    {
+        $container->addCompilerPass(new class() implements CompilerPassInterface {
+            public function process(ContainerBuilder $container): void
+            {
+                $redirectUri = $_ENV['CRIIPTO_REDIRECT_URI'] ?? null;
+                if (!is_string($redirectUri) || '' === $redirectUri) {
+                    return;
+                }
+
+                $container->register(DummyUrlGenerator::class, DummyUrlGenerator::class)
+                    ->setArgument('$url', $redirectUri)
+                ;
+
+                $container->findDefinition(AuthorizationUrlGenerator::class)
+                    ->setArgument('$urlGenerator', new Reference(DummyUrlGenerator::class))
+                ;
+
+                $container->findDefinition(CriiptoCallbackAction::class)
+                    ->setArgument('$urlGenerator', new Reference(DummyUrlGenerator::class))
+                ;
+            }
+        });
+    }
 
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 

@@ -5,3 +5,5 @@ setono_sylius_age_verification:
             minimum_age_help: The minimum age required to purchase this product
     ui:
         age_verification: Age verification
+        age_verification_text: You have to be at least %age% years old to purchase one or more products in your cart
+        verify_age: Verify age

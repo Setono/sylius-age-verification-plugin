@@ -1,0 +1,5 @@
+setono_sylius_age_verification_shop_criipto_callback:
+    path: /criipto/callback
+    methods: [GET]
+    defaults:
+        _controller: Setono\SyliusAgeVerificationPlugin\Controller\CriiptoCallbackAction

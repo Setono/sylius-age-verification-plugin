@@ -14,8 +14,55 @@ sylius_shop:
 sylius_api:
     enabled: true
 
+sylius_customer:
+    resources:
+        customer:
+            classes:
+                model: Setono\SyliusAgeVerificationPlugin\Tests\Application\Model\Customer
+                
 sylius_product:
     resources:
         product:
             classes:
                 model: Setono\SyliusAgeVerificationPlugin\Tests\Application\Model\Product
+
+sylius_fixtures:
+    suites:
+        default:
+            fixtures:
+                geographical:
+                    options:
+                        countries:
+                            - 'US'
+                            - 'FR'
+                            - 'DE'
+                            - 'AU'
+                            - 'CA'
+                            - 'MX'
+                            - 'NZ'
+                            - 'PT'
+                            - 'ES'
+                            - 'CN'
+                            - 'GB'
+                            - 'PL'
+                            - 'DK'
+                        zones:
+                            US:
+                                name: 'United States of America'
+                                countries:
+                                    - 'US'
+                            WORLD:
+                                name: 'Rest of the World'
+                                countries:
+                                    - 'FR'
+                                    - 'DE'
+                                    - 'AU'
+                                    - 'CA'
+                                    - 'MX'
+                                    - 'NZ'
+                                    - 'PT'
+                                    - 'ES'
+                                    - 'CN'
+                                    - 'GB'
+                                    - 'PL'
+                                    - 'DK'

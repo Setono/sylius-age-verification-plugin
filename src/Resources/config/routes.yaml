@@ -1,9 +1,2 @@
-setono_sylius_age_verification_shop:
-    resource: "@SetonoSyliusAgeVerificationPlugin/Resources/config/routes/shop.yaml"
-    prefix: /{_locale}
-    requirements:
-        _locale: ^[A-Za-z]{2,4}(_([A-Za-z]{4}|[0-9]{3}))?(_([A-Za-z]{2}|[0-9]{3}))?$
-
-setono_sylius_age_verification_admin:
-    resource: "@SetonoSyliusAgeVerificationPlugin/Resources/config/routes/admin.yaml"
-    prefix: /admin
+setono_sylius_age_verification_global:
+    resource: "@SetonoSyliusAgeVerificationPlugin/Resources/config/routes/global.yaml"
