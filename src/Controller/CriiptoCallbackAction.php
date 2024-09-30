@@ -71,6 +71,6 @@ final class CriiptoCallbackAction
 
         $this->getManager($customer)->flush();
 
-        return new RedirectResponse('https://127.0.0.1:8000/en_US/checkout/complete');
+        return new RedirectResponse($this->urlGenerator->generate('sylius_shop_checkout_complete'));
     }
 }
