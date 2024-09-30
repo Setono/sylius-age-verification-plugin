@@ -29,8 +29,6 @@ final class AuthorizationUrlGenerator implements AuthorizationUrlGeneratorInterf
             ),
             'response_type' => 'code',
             'response_mode' => 'query',
-            'nonce' => 'ecnon-dc3c110c-49b3-4deb-96aa-d73b0743cbb0',
-            'state' => 'state',
             'acr_values' => 'urn:age-verification',
             'login_hint' => sprintf('country:%s', $countryCode),
         ];
