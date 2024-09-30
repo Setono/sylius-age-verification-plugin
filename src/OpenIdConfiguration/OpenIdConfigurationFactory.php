@@ -15,14 +15,15 @@ final class OpenIdConfigurationFactory implements OpenIdConfigurationFactoryInte
 
     public function create(): OpenIdConfiguration
     {
-        $client = HttpClient::create();
-        $openIdConfiguration = $client
+        $httpClient = HttpClient::create();
+        $openIdConfiguration = $httpClient
             ->request('GET', sprintf('https://%s/.well-known/openid-configuration', $this->verifyDomain))
             ->toArray()
         ;
 
         Assert::keyExists($openIdConfiguration, 'token_endpoint');
         Assert::keyExists($openIdConfiguration, 'authorization_endpoint');
+        Assert::keyExists($openIdConfiguration, 'jwks_uri');
 
         /** @var mixed $tokenEndpoint */
         $tokenEndpoint = $openIdConfiguration['token_endpoint'];
@@ -32,6 +33,15 @@ final class OpenIdConfigurationFactory implements OpenIdConfigurationFactoryInte
         $authorizationEndpoint = $openIdConfiguration['authorization_endpoint'];
         Assert::stringNotEmpty($authorizationEndpoint);
 
-        return new OpenIdConfiguration($authorizationEndpoint, $tokenEndpoint);
+        /** @var mixed $jwksUri */
+        $jwksUri = $openIdConfiguration['jwks_uri'];
+        Assert::stringNotEmpty($jwksUri);
+
+        $keys = $httpClient
+            ->request('GET', $jwksUri)
+            ->toArray()
+        ;
+
+        return new OpenIdConfiguration($authorizationEndpoint, $tokenEndpoint, $keys);
     }
 }

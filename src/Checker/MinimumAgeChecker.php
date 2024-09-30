@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\SyliusAgeVerificationPlugin\Checker;
 
+use Setono\SyliusAgeVerificationPlugin\Model\AgeAwareCustomerInterface;
 use Setono\SyliusAgeVerificationPlugin\Model\AgeAwareProductInterface;
 use Setono\SyliusAgeVerificationPlugin\Model\MinimumAge;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -40,6 +41,11 @@ final class MinimumAgeChecker implements MinimumAgeCheckerInterface
             if (null === $minimumAge || $productMinimumAge > $minimumAge->value) {
                 $minimumAge = MinimumAge::from($productMinimumAge);
             }
+        }
+
+        $customer = $order->getCustomer();
+        if (null !== $minimumAge && $customer instanceof AgeAwareCustomerInterface && $customer->isOlderThan($minimumAge->value)) {
+            return null;
         }
 
         return $minimumAge;

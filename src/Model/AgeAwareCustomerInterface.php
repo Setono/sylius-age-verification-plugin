@@ -6,9 +6,9 @@ namespace Setono\SyliusAgeVerificationPlugin\Model;
 
 interface AgeAwareCustomerInterface
 {
-    public function isOver(int $age): bool;
+    public function isOlderThan(int $age): bool;
 
-    public function setIsOverAgeCheckedAt(\DateTimeInterface $ageCheckedAt): void;
+    public function setAgeCheckedAt(\DateTimeInterface $ageCheckedAt): void;
 
-    public function setIsOver(int $age): void;
+    public function setOlderThan(?int $age): void;
 }

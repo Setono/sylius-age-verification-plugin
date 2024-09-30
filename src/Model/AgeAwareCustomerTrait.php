@@ -10,36 +10,36 @@ trait AgeAwareCustomerTrait
 {
     /** @ORM\Column(type="datetime", nullable=true) */
     #[ORM\Column(type: 'datetime', nullable: true)]
-    protected ?\DateTimeInterface $isOverAgeCheckedAt = null;
+    protected ?\DateTimeInterface $ageCheckedAt = null;
 
     /** @ORM\Column(type="integer", nullable=true, options={"unsigned"=true}) */
     #[ORM\Column(type: 'integer', nullable: true, options: ['unsigned' => true])]
-    protected ?int $isOver = null;
+    protected ?int $olderThan = null;
 
     // todo test this
-    public function isOver(int $age): bool
+    public function isOlderThan(int $age): bool
     {
-        if ($this->isOverAgeCheckedAt === null || $this->isOver === null) {
+        if ($this->ageCheckedAt === null || $this->olderThan === null) {
             return false;
         }
 
-        if ($age <= $this->isOver) {
+        if ($age <= $this->olderThan) {
             return true;
         }
 
         $now = new \DateTimeImmutable();
-        $diff = $now->diff($this->isOverAgeCheckedAt);
+        $diff = $now->diff($this->ageCheckedAt);
 
-        return $age <= ($this->isOver + $diff->y);
+        return $age <= ($this->olderThan + $diff->y);
     }
 
-    public function setIsOverAgeCheckedAt(?\DateTimeInterface $isOverAgeCheckedAt): void
+    public function setAgeCheckedAt(?\DateTimeInterface $isOverAgeCheckedAt): void
     {
-        $this->isOverAgeCheckedAt = $isOverAgeCheckedAt;
+        $this->ageCheckedAt = $isOverAgeCheckedAt;
     }
 
-    public function setIsOver(?int $age): void
+    public function setOlderThan(?int $age): void
     {
-        $this->isOver = $age;
+        $this->olderThan = $age;
     }
 }

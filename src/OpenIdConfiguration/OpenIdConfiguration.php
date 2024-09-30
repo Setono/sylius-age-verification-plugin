@@ -11,7 +11,10 @@ namespace Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration;
  */
 class OpenIdConfiguration
 {
-    public function __construct(public readonly string $authorizationEndpoint, public readonly string $tokenEndpoint)
-    {
+    public function __construct(
+        public readonly string $authorizationEndpoint,
+        public readonly string $tokenEndpoint,
+        public readonly array $keys,
+    ) {
     }
 }
