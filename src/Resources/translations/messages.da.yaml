@@ -1,0 +1,9 @@
+setono_sylius_age_verification:
+    form:
+        product:
+            minimum_age: Minimumsalder
+            minimum_age_help: Den minimumsalder, der kræves for at købe dette produkt
+    ui:
+        age_verification: Aldersverifikation
+        age_verification_text: Du skal være mindst %age% år gammel for at købe et eller flere produkter i din kurv
+        verify_age: Bekræft alder
