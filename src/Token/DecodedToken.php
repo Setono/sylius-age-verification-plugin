@@ -9,7 +9,6 @@ final class DecodedToken
     public function __construct(
         public string $iss,
         public string $aud,
-        public string $nonce,
         /** @var array{country: string, is_over_15?: bool, is_over_16?: bool, is_over_18?: bool, is_over_21?: bool} $ageVerification */
         public array $ageVerification,
     ) {
