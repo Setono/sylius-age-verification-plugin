@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusAgeVerificationPlugin\Tests\Application;
 
-use Setono\SyliusAgeVerificationPlugin\Controller\CriiptoCallbackAction;
+use Setono\SyliusAgeVerificationPlugin\Controller\InitiateVerificationAction;
+use Setono\SyliusAgeVerificationPlugin\Controller\VerifyIdCallbackAction;
 use Setono\SyliusAgeVerificationPlugin\Tests\Application\UrlGenerator\DummyUrlGenerator;
 use Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -24,7 +25,7 @@ final class Kernel extends BaseKernel
         $container->addCompilerPass(new class() implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
-                $redirectUri = $_ENV['CRIIPTO_REDIRECT_URI'] ?? null;
+                $redirectUri = $_ENV['VERIFYID_REDIRECT_URI'] ?? null;
                 if (!is_string($redirectUri) || '' === $redirectUri) {
                     return;
                 }
@@ -37,7 +38,11 @@ final class Kernel extends BaseKernel
                     ->setArgument('$urlGenerator', new Reference(DummyUrlGenerator::class))
                 ;
 
-                $container->findDefinition(CriiptoCallbackAction::class)
+                $container->findDefinition(InitiateVerificationAction::class)
+                    ->setArgument('$urlGenerator', new Reference(DummyUrlGenerator::class))
+                ;
+
+                $container->findDefinition(VerifyIdCallbackAction::class)
                     ->setArgument('$urlGenerator', new Reference(DummyUrlGenerator::class))
                 ;
             }

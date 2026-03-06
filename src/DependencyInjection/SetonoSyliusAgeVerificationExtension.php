@@ -14,14 +14,12 @@ final class SetonoSyliusAgeVerificationExtension extends Extension implements Pr
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        /** @var array{enabled_countries: list<string>, criipto: array{client_id: string, client_secret: string, verify_domain: string}} $config */
+        /** @var array{enabled_countries: list<string>, verify_id: array{plugin_key: string}} $config */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $container->setParameter('setono_sylius_age_verification.enabled_countries', $config['enabled_countries']);
-        $container->setParameter('setono_sylius_age_verification.criipto.client_id', $config['criipto']['client_id']);
-        $container->setParameter('setono_sylius_age_verification.criipto.client_secret', $config['criipto']['client_secret']);
-        $container->setParameter('setono_sylius_age_verification.criipto.verify_domain', $config['criipto']['verify_domain']);
+        $container->setParameter('setono_sylius_age_verification.verify_id.plugin_key', $config['verify_id']['plugin_key']);
 
         $loader->load('services.xml');
     }

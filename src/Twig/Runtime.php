@@ -33,13 +33,6 @@ final class Runtime implements RuntimeExtensionInterface
 
     public function authorizationUrl(MinimumAge $age): string
     {
-        /** @var OrderInterface $order */
-        $order = $this->cartContext->getCart();
-        Assert::isInstanceOf($order, OrderInterface::class);
-
-        $countryCode = $order->getShippingAddress()?->getCountryCode();
-        Assert::notNull($countryCode);
-
-        return $this->authorizationUrlGenerator->generateUrl($age, $countryCode);
+        return $this->authorizationUrlGenerator->generateUrl($age);
     }
 }

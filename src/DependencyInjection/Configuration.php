@@ -26,20 +26,12 @@ final class Configuration implements ConfigurationInterface
                     ->requiresAtLeastOneElement()
                     ->scalarPrototype()->end()
                 ->end()
-                ->arrayNode('criipto')
+                ->arrayNode('verify_id')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('client_id')
+                        ->scalarNode('plugin_key')
                             ->cannotBeEmpty()
-                            ->defaultValue('%env(CRIIPTO_CLIENT_ID)%')
-                        ->end()
-                        ->scalarNode('client_secret')
-                            ->cannotBeEmpty()
-                            ->defaultValue('%env(CRIIPTO_CLIENT_SECRET)%')
-                        ->end()
-                        ->scalarNode('verify_domain')
-                            ->cannotBeEmpty()
-                            ->defaultValue('%env(CRIIPTO_VERIFY_DOMAIN)%')
+                            ->defaultValue('%env(VERIFYID_PLUGIN_KEY)%')
         ;
 
         return $treeBuilder;

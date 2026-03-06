@@ -2,8 +2,6 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- todo add interfaces as aliases -->
-
         <service id="Setono\SyliusAgeVerificationPlugin\Checker\MinimumAgeCheckerInterface"
                  alias="Setono\SyliusAgeVerificationPlugin\Checker\MinimumAgeChecker"/>
 
@@ -11,14 +9,17 @@
             <argument>%setono_sylius_age_verification.enabled_countries%</argument>
         </service>
 
-        <service id="Setono\SyliusAgeVerificationPlugin\Controller\CriiptoCallbackAction" public="true">
-            <argument type="service" id="Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration\OpenIdConfiguration"/>
+        <service id="Setono\SyliusAgeVerificationPlugin\Controller\InitiateVerificationAction" public="true">
+            <argument type="service" id="http_client"/>
             <argument type="service" id="router"/>
-            <argument type="service" id="Setono\SyliusAgeVerificationPlugin\Token\TokenDecoderInterface"/>
+            <argument>%setono_sylius_age_verification.verify_id.plugin_key%</argument>
+        </service>
+
+        <service id="Setono\SyliusAgeVerificationPlugin\Controller\VerifyIdCallbackAction" public="true">
+            <argument type="service" id="http_client"/>
+            <argument type="service" id="router"/>
             <argument type="service" id="sylius.context.cart"/>
             <argument type="service" id="doctrine"/>
-            <argument>%env(CRIIPTO_CLIENT_ID)%</argument>
-            <argument>%env(CRIIPTO_CLIENT_SECRET)%</argument>
         </service>
 
         <service id="Setono\SyliusAgeVerificationPlugin\EventSubscriber\Admin\AddAgeVerificationTabSubscriber">
@@ -28,24 +29,6 @@
         <service id="Setono\SyliusAgeVerificationPlugin\Form\Extension\ProductTypeExtension">
             <tag name="form.type_extension"/>
         </service>
-
-        <service id="Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration\OpenIdConfiguration" lazy="true">
-            <factory
-                service="Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration\OpenIdConfigurationFactoryInterface"
-                method="create"/>
-        </service>
-
-        <service id="Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration\OpenIdConfigurationFactoryInterface"
-                 alias="Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration\OpenIdConfigurationFactory"/>
-
-        <service id="Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration\OpenIdConfigurationFactory">
-            <argument>%setono_sylius_age_verification.criipto.verify_domain%</argument>
-        </service>
-
-        <service id="Setono\SyliusAgeVerificationPlugin\Token\TokenDecoderInterface"
-                 alias="Setono\SyliusAgeVerificationPlugin\Token\TokenDecoder"/>
-
-        <service id="Setono\SyliusAgeVerificationPlugin\Token\TokenDecoder"/>
 
         <service id="Setono\SyliusAgeVerificationPlugin\Twig\Extension">
             <tag name="twig.extension"/>
@@ -64,10 +47,7 @@
                  alias="Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGenerator"/>
 
         <service id="Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGenerator">
-            <argument type="service" id="Setono\SyliusAgeVerificationPlugin\OpenIdConfiguration\OpenIdConfiguration"/>
             <argument type="service" id="router"/>
-            <argument>%setono_sylius_age_verification.criipto.client_id%</argument>
-            <argument>%setono_sylius_age_verification.criipto.verify_domain%</argument>
         </service>
     </services>
 </container>

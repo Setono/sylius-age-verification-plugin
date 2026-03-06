@@ -8,5 +8,5 @@ use Setono\SyliusAgeVerificationPlugin\Model\MinimumAge;
 
 interface AuthorizationUrlGeneratorInterface
 {
-    public function generateUrl(MinimumAge $age, string $countryCode): string;
+    public function generateUrl(MinimumAge $age): string;
 }
