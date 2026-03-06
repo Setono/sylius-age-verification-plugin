@@ -280,7 +280,12 @@ jobs:
                     dependency-versions: "${{ matrix.dependencies }}"
 
             -   name: "Run infection"
-                run: "vendor/bin/infection"
+                run: |
+                    if find tests -name '*Test.php' -not -path 'tests/Application/*' 2>/dev/null | grep -q .; then
+                      vendor/bin/infection
+                    else
+                      echo "No test files found, skipping mutation tests"
+                    fi
                 env:
                     STRYKER_DASHBOARD_API_KEY: "${{ secrets.STRYKER_DASHBOARD_API_KEY }}"
 

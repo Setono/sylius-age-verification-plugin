@@ -55,3 +55,7 @@ Services are defined in `src/Resources/config/services.xml` (not autowired). All
 - All PHP files use `declare(strict_types=1)`
 - PHP 8.1 minimum (Rector enforces `UP_TO_PHP_81`)
 - PHPStan at level max with Symfony and Doctrine extensions
+
+## Git Conventions
+
+- Do not use command substitution (`$(...)` or backticks) for commit messages. Use the `-m` flag with a plain string instead.

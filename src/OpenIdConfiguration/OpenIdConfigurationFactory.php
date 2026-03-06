@@ -37,6 +37,7 @@ final class OpenIdConfigurationFactory implements OpenIdConfigurationFactoryInte
         $jwksUri = $openIdConfiguration['jwks_uri'];
         Assert::stringNotEmpty($jwksUri);
 
+        /** @var array<string, mixed> $keys */
         $keys = $httpClient
             ->request('GET', $jwksUri)
             ->toArray()
