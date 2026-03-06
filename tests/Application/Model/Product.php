@@ -9,11 +9,8 @@ use Setono\SyliusAgeVerificationPlugin\Model\AgeAwareProductInterface;
 use Setono\SyliusAgeVerificationPlugin\Model\AgeAwareProductTrait;
 use Sylius\Component\Core\Model\Product as BaseProduct;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="sylius_product")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'sylius_product')]
 class Product extends BaseProduct implements AgeAwareProductInterface
 {
     use AgeAwareProductTrait;

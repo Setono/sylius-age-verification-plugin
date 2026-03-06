@@ -34,14 +34,11 @@
         "babdev/pagerfanta-bundle": "^3.8",
         "behat/behat": "^3.14",
         "doctrine/doctrine-bundle": "^2.11",
-        "infection/infection": "^0.27.11",
         "jms/serializer-bundle": "^4.2",
         "lexik/jwt-authentication-bundle": "^2.17",
-        "phpunit/phpunit": "^9.6.20",
-        "psalm/plugin-phpunit": "^0.18.4",
-        "setono/code-quality-pack": "^2.8.3",
+        "setono/sylius-plugin-pack": "~1.14.1",
         "shipmonk/composer-dependency-analyser": "^1.6",
-        "sylius/sylius": "~1.12.19",
+        "sylius-labs/polyfill-symfony-security": "^1.1.2",
         "symfony/debug-bundle": "^6.4 || ^7.0",
         "symfony/dotenv": "^6.4 || ^7.0",
         "symfony/intl": "^6.4 || ^7.0",
@@ -67,10 +64,14 @@
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true,
+            "phpstan/extension-installer": true,
             "symfony/thanks": false
+        },
+        "audit": {
+            "block-insecure": false
         },
         "sort-packages": true
     },
@@ -80,7 +81,7 @@
         }
     },
     "scripts": {
-        "analyse": "psalm",
+        "analyse": "phpstan analyse",
         "check-style": "ecs check",
         "fix-style": "ecs check --fix",
         "phpunit": "phpunit"

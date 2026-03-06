@@ -39,7 +39,6 @@ final class CriiptoCallbackAction
         $order = $this->cartContext->getCart();
         Assert::isInstanceOf($order, OrderInterface::class);
 
-        /** @var AgeAwareCustomerInterface $customer */
         $customer = $order->getCustomer();
         Assert::isInstanceOf($customer, AgeAwareCustomerInterface::class);
 

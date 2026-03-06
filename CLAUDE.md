@@ -12,7 +12,7 @@ Sylius plugin that adds age verification to checkout using [Criipto](https://www
 - **Run single test:** `vendor/bin/phpunit tests/Path/To/TestFile.php --filter testMethodName`
 - **Check coding standards:** `composer check-style`
 - **Fix coding standards:** `composer fix-style`
-- **Static analysis (Psalm):** `composer analyse` (error level 1, PHP 8.1)
+- **Static analysis (PHPStan):** `composer analyse` (level max)
 - **Rector:** `vendor/bin/rector process --dry-run`
 - **Mutation testing:** `vendor/bin/infection`
 - **Dependency analysis:** `vendor/bin/composer-dependency-analyser`
@@ -54,4 +54,4 @@ Services are defined in `src/Resources/config/services.xml` (not autowired). All
 - Uses Sylius Labs coding standard via ECS (`ecs.php` imports `vendor/sylius-labs/coding-standard/ecs.php`)
 - All PHP files use `declare(strict_types=1)`
 - PHP 8.1 minimum (Rector enforces `UP_TO_PHP_81`)
-- Psalm at error level 1
+- PHPStan at level max with Symfony and Doctrine extensions

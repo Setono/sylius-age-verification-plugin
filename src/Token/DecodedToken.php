@@ -20,10 +20,10 @@ final class DecodedToken
     public function olderThan(): ?int
     {
         return match (true) {
-            $this->ageVerification['is_over_21'] ?? null === true => 21,
-            $this->ageVerification['is_over_18'] ?? null === true => 18,
-            $this->ageVerification['is_over_16'] ?? null === true => 16,
-            $this->ageVerification['is_over_15'] ?? null === true => 15,
+            ($this->ageVerification['is_over_21'] ?? null) === true => 21,
+            ($this->ageVerification['is_over_18'] ?? null) === true => 18,
+            ($this->ageVerification['is_over_16'] ?? null) === true => 16,
+            ($this->ageVerification['is_over_15'] ?? null) === true => 15,
             default => null,
         };
     }

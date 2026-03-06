@@ -24,7 +24,10 @@ final class ProductTypeExtension extends AbstractTypeExtension
         ]);
     }
 
-    public static function getExtendedTypes(): \Generator
+    /**
+     * @return iterable<string>
+     */
+    public static function getExtendedTypes(): iterable
     {
         yield ProductType::class;
     }

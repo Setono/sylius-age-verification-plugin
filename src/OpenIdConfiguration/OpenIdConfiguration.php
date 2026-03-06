@@ -14,6 +14,7 @@ class OpenIdConfiguration
     public function __construct(
         public readonly string $authorizationEndpoint,
         public readonly string $tokenEndpoint,
+        /** @var array<string, mixed> */
         public readonly array $keys,
     ) {
     }

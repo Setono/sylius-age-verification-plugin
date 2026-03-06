@@ -14,11 +14,7 @@ final class SetonoSyliusAgeVerificationExtension extends Extension implements Pr
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        /**
-         * @psalm-suppress PossiblyNullArgument
-         *
-         * @var array{enabled_countries: list<string>, criipto: array{client_id: string, client_secret: string, verify_domain: string}} $config
-         */
+        /** @var array{enabled_countries: list<string>, criipto: array{client_id: string, client_secret: string, verify_domain: string}} $config */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
