@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Setono\SyliusAgeVerificationPlugin\Controller;
 
-use Setono\SyliusAgeVerificationPlugin\Model\MinimumAge;
+use Setono\SyliusAgeVerificationPlugin\Checker\MinimumAgeCheckerInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -18,20 +20,35 @@ final class InitiateVerificationAction extends AbstractAction
         private readonly HttpClientInterface $httpClient,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly ChannelContextInterface $channelContext,
+        private readonly CartContextInterface $cartContext,
+        private readonly MinimumAgeCheckerInterface $minimumAgeChecker,
         private readonly string $pluginKey,
     ) {
     }
 
-    public function __invoke(Request $request, int $age): RedirectResponse
+    public function __invoke(Request $request): RedirectResponse
     {
-        $minimumAge = MinimumAge::from($age);
+        $checkoutCompleteUrl = $this->urlGenerator->generate('sylius_shop_checkout_complete');
+        $redirectBackUrl = $request->headers->get('referer', $checkoutCompleteUrl);
+
+        $cart = $this->cartContext->getCart();
+        if (!$cart instanceof OrderInterface) {
+            return new RedirectResponse($redirectBackUrl);
+        }
+
+        $minimumAge = $this->minimumAgeChecker->check($cart);
+        if (null === $minimumAge) {
+            return new RedirectResponse($redirectBackUrl);
+        }
 
         $deviceId = Uuid::v4()->toRfc4122();
         $request->getSession()->set('verifyid_device_id', $deviceId);
 
-        $callbackUrl = sprintf('https://%s%s', rtrim((string) $this->channelContext->getChannel()->getHostname(), '/'), $this->urlGenerator->generate('setono_sylius_age_verification_shop_callback'));
-
-        $checkoutCompleteUrl = $this->urlGenerator->generate('sylius_shop_checkout_complete');
+        $callbackUrl = sprintf(
+            'https://%s%s',
+            rtrim((string) $this->channelContext->getChannel()->getHostname(), '/'),
+            $this->urlGenerator->generate('setono_sylius_age_verification_shop_callback'),
+        );
 
         try {
             $response = $this->httpClient->request('GET', sprintf(

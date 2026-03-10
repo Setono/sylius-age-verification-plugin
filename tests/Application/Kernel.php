@@ -7,7 +7,6 @@ namespace Setono\SyliusAgeVerificationPlugin\Tests\Application;
 use Setono\SyliusAgeVerificationPlugin\Controller\InitiateVerificationAction;
 use Setono\SyliusAgeVerificationPlugin\Controller\VerifyIdCallbackAction;
 use Setono\SyliusAgeVerificationPlugin\Tests\Application\UrlGenerator\DummyUrlGenerator;
-use Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,10 +31,6 @@ final class Kernel extends BaseKernel
 
                 $container->register(DummyUrlGenerator::class, DummyUrlGenerator::class)
                     ->setArgument('$url', $redirectUri)
-                ;
-
-                $container->findDefinition(AuthorizationUrlGenerator::class)
-                    ->setArgument('$urlGenerator', new Reference(DummyUrlGenerator::class))
                 ;
 
                 $container->findDefinition(InitiateVerificationAction::class)

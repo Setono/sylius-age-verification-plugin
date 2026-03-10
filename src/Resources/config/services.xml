@@ -13,6 +13,8 @@
             <argument type="service" id="http_client"/>
             <argument type="service" id="router"/>
             <argument type="service" id="sylius.context.channel"/>
+            <argument type="service" id="sylius.context.cart"/>
+            <argument type="service" id="Setono\SyliusAgeVerificationPlugin\Checker\MinimumAgeCheckerInterface"/>
             <argument>%setono_sylius_age_verification.verify_id.plugin_key%</argument>
         </service>
 
@@ -38,17 +40,9 @@
         <service id="Setono\SyliusAgeVerificationPlugin\Twig\Runtime">
             <argument type="service" id="Setono\SyliusAgeVerificationPlugin\Checker\MinimumAgeCheckerInterface"/>
             <argument type="service" id="sylius.context.cart"/>
-            <argument type="service"
-                      id="Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGeneratorInterface"/>
 
             <tag name="twig.runtime"/>
         </service>
 
-        <service id="Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGeneratorInterface"
-                 alias="Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGenerator"/>
-
-        <service id="Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGenerator">
-            <argument type="service" id="router"/>
-        </service>
     </services>
 </container>

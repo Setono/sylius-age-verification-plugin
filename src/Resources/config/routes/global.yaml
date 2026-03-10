@@ -1,8 +1,6 @@
 setono_sylius_age_verification_shop_initiate:
-    path: /age-verification/initiate/{age}
+    path: /age-verification/initiate
     methods: [GET]
-    requirements:
-        age: \d+
     defaults:
         _controller: Setono\SyliusAgeVerificationPlugin\Controller\InitiateVerificationAction
 

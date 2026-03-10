@@ -1,19 +1,23 @@
 ## ADDED Requirements
 
 ### Requirement: Initiate age verification via VerifyID
-The system SHALL provide a controller action that initiates the VerifyID age verification flow. It SHALL generate a UUID v4 device_id, store it in the Symfony session, call the VerifyID `/url_generator_s/{pluginKey}/{device_id}/{age}?domain={callbackUrl}` endpoint, and redirect the user to the returned verification URL.
+The system SHALL provide a controller action that initiates the VerifyID age verification flow. It SHALL determine the minimum age by inspecting the current cart via `MinimumAgeCheckerInterface`. It SHALL generate a UUID v4 device_id, store it in the Symfony session, call the VerifyID `/url_generator_s/{pluginKey}/{device_id}/{age}?domain={callbackUrl}` endpoint, and redirect the user to the returned verification URL. If the checker returns no minimum age (no age-restricted items, non-applicable country, or already verified), the controller SHALL redirect back to the referring page (via Referer header) or to the checkout complete page as fallback.
 
 #### Scenario: Successful verification initiation
-- **WHEN** a user clicks the "Verify Age" button on the checkout page with a minimum age of 18
-- **THEN** the system generates a UUID v4 device_id, stores it in the session, calls `GET https://api.verifyid.dk/api/url_generator_s/{pluginKey}/{device_id}/18?domain={callbackUrl}`, and redirects the user to the URL returned in the response
+- **WHEN** a user clicks the "Verify Age" button on the checkout page and the cart contains a product with minimum age 18
+- **THEN** the system computes the minimum age from the cart, generates a UUID v4 device_id, stores it in the session, calls `GET https://api.verifyid.dk/api/url_generator_s/{pluginKey}/{device_id}/18?domain={callbackUrl}`, and redirects the user to the URL returned in the response
 
 #### Scenario: Successful verification initiation for age 16
-- **WHEN** a user clicks the "Verify Age" button on the checkout page with a minimum age of 16
-- **THEN** the system calls the VerifyID endpoint with age parameter `16` and redirects to the returned URL
+- **WHEN** a user clicks the "Verify Age" button and the cart contains a product with minimum age 16
+- **THEN** the system computes the minimum age as 16 from the cart and calls the VerifyID endpoint with age parameter `16`
 
 #### Scenario: VerifyID API returns error
 - **WHEN** the VerifyID URL generator endpoint returns a non-200 response or returns `url: null`
-- **THEN** the system redirects the user back to the checkout complete page (does not crash)
+- **THEN** the system redirects the user back to the checkout complete page with an error flash message
+
+#### Scenario: No age-restricted items in cart
+- **WHEN** a user navigates to the initiation route but the cart contains no age-restricted items (or the checker returns null)
+- **THEN** the system redirects the user back to the Referer URL, or to the checkout complete page if no Referer is present
 
 ### Requirement: Handle VerifyID callback
 The system SHALL provide a callback controller action at a public route. When VerifyID redirects the user back after verification, the callback SHALL read the `token_age_verified` query parameter, retrieve the `device_id` from the session, call the VerifyID `/auth_check/{token}/{device_id}` endpoint, and store the verified age on the customer.
@@ -63,9 +67,3 @@ The system SHALL generate the VerifyID device_id server-side as a UUID v4 string
 - **WHEN** the initiation controller generates a device_id and stores it in the session
 - **THEN** the callback controller retrieves the same device_id from the session to use in the `/auth_check/` API call
 
-### Requirement: Twig runtime generates internal route URL
-The Twig runtime `authorizationUrl()` method SHALL return a URL to the internal initiation controller (not directly to VerifyID). The initiation controller route SHALL include the minimum age as a parameter.
-
-#### Scenario: Template renders verify button
-- **WHEN** the checkout complete page renders and an age check is required for age 18
-- **THEN** the "Verify Age" link points to the internal initiation route with age 18 as a parameter

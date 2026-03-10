@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Setono\SyliusAgeVerificationPlugin\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
+use Setono\SyliusAgeVerificationPlugin\Checker\MinimumAgeCheckerInterface;
 use Setono\SyliusAgeVerificationPlugin\Controller\InitiateVerificationAction;
+use Setono\SyliusAgeVerificationPlugin\Model\MinimumAge;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,12 +32,19 @@ final class InitiateVerificationActionTest extends TestCase
             ['sylius_shop_checkout_complete', [], UrlGeneratorInterface::ABSOLUTE_PATH, '/checkout/complete'],
         ]);
 
-        $action = new InitiateVerificationAction($httpClient, $urlGenerator, $this->createChannelContext(), 'test_plugin_key');
+        $action = new InitiateVerificationAction(
+            $httpClient,
+            $urlGenerator,
+            $this->createChannelContext(),
+            $this->createCartContext(),
+            $this->createMinimumAgeChecker(MinimumAge::from(18)),
+            'test_plugin_key',
+        );
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
 
-        $response = $action($request, 18);
+        $response = $action($request);
 
         self::assertSame('https://verifyid.dk/verify/123', $response->getTargetUrl());
         self::assertNotNull($request->getSession()->get('verifyid_device_id'));
@@ -47,12 +58,44 @@ final class InitiateVerificationActionTest extends TestCase
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->method('generate')->willReturn('/checkout/complete');
 
-        $action = new InitiateVerificationAction($httpClient, $urlGenerator, $this->createChannelContext(), 'test_plugin_key');
+        $action = new InitiateVerificationAction(
+            $httpClient,
+            $urlGenerator,
+            $this->createChannelContext(),
+            $this->createCartContext(),
+            $this->createMinimumAgeChecker(MinimumAge::from(18)),
+            'test_plugin_key',
+        );
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
 
-        $response = $action($request, 18);
+        $response = $action($request);
+
+        self::assertSame('/checkout/complete', $response->getTargetUrl());
+    }
+
+    public function testItRedirectsBackWhenNoAgeRestrictedItems(): void
+    {
+        $httpClient = new MockHttpClient();
+
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator->method('generate')->willReturn('/checkout/complete');
+
+        $action = new InitiateVerificationAction(
+            $httpClient,
+            $urlGenerator,
+            $this->createChannelContext(),
+            $this->createCartContext(),
+            $this->createMinimumAgeChecker(null),
+            'test_plugin_key',
+        );
+
+        $request = new Request();
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $request->headers->set('referer', '/checkout/complete');
+
+        $response = $action($request);
 
         self::assertSame('/checkout/complete', $response->getTargetUrl());
     }
@@ -66,5 +109,23 @@ final class InitiateVerificationActionTest extends TestCase
         $channelContext->method('getChannel')->willReturn($channel);
 
         return $channelContext;
+    }
+
+    private function createCartContext(): CartContextInterface
+    {
+        $cart = $this->createMock(OrderInterface::class);
+
+        $cartContext = $this->createMock(CartContextInterface::class);
+        $cartContext->method('getCart')->willReturn($cart);
+
+        return $cartContext;
+    }
+
+    private function createMinimumAgeChecker(?MinimumAge $result): MinimumAgeCheckerInterface
+    {
+        $checker = $this->createMock(MinimumAgeCheckerInterface::class);
+        $checker->method('check')->willReturn($result);
+
+        return $checker;
     }
 }

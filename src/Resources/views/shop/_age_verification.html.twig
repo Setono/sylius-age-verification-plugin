@@ -3,6 +3,6 @@
     <div class="ui segment center aligned">
         <h4 class="ui header">{{ 'setono_sylius_age_verification.ui.age_verification'|trans }}</h4>
         <p>{{ 'setono_sylius_age_verification.ui.age_verification_text'|trans({ '%age%': minimumAge.value }) }}</p>
-        <a href="{{ setono_sylius_age_verification__authorization_url(minimumAge) }}" class="ui button">{{ 'setono_sylius_age_verification.ui.verify_age'|trans }}</a>
+        <a href="{{ path('setono_sylius_age_verification_shop_initiate') }}" class="ui button">{{ 'setono_sylius_age_verification.ui.verify_age'|trans }}</a>
     </div>
 {% endif %}

@@ -6,7 +6,6 @@ namespace Setono\SyliusAgeVerificationPlugin\Twig;
 
 use Setono\SyliusAgeVerificationPlugin\Checker\MinimumAgeCheckerInterface;
 use Setono\SyliusAgeVerificationPlugin\Model\MinimumAge;
-use Setono\SyliusAgeVerificationPlugin\UrlGenerator\AuthorizationUrlGeneratorInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -17,7 +16,6 @@ final class Runtime implements RuntimeExtensionInterface
     public function __construct(
         private readonly MinimumAgeCheckerInterface $minimumAgeChecker,
         private readonly CartContextInterface $cartContext,
-        private readonly AuthorizationUrlGeneratorInterface $authorizationUrlGenerator,
     ) {
     }
 
@@ -29,10 +27,5 @@ final class Runtime implements RuntimeExtensionInterface
         }
 
         return $this->minimumAgeChecker->check($order);
-    }
-
-    public function authorizationUrl(MinimumAge $age): string
-    {
-        return $this->authorizationUrlGenerator->generateUrl($age);
     }
 }
