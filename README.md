@@ -6,23 +6,13 @@
 [![Code Coverage][ico-code-coverage]][link-code-coverage]
 [![Mutation testing][ico-infection]][link-infection]
 
-A plugin to add age verification to your Sylius store using [Criipto](https://www.criipto.com/) as the age verification provider.
+A plugin to add age verification to your Sylius store using [VerifyID](https://verifyid.dk/) as the age verification provider.
 
-During checkout, if the customer's cart contains products with a minimum age requirement and the shipping address is in an enabled country, the plugin prompts the customer to verify their age via Criipto before completing the order. Supported minimum age thresholds are 15, 16, 18, and 21.
+During checkout, if the customer's cart contains products with a minimum age requirement and the shipping address is in an enabled country, the plugin prompts the customer to verify their age via VerifyID before completing the order. Supported minimum age thresholds are 16 and 18.
 
 ## Prerequisites
 
-You need a [Criipto](https://www.criipto.com/) account. From the Criipto dashboard, obtain your:
-
-- **Client ID**
-- **Client Secret**
-- **Verify Domain** (e.g. `your-tenant.criipto.id`)
-
-You must also register the callback URL in your Criipto application settings. The callback URL is:
-
-```
-https://your-domain.com/criipto/callback
-```
+You need a [VerifyID](https://verifyid.dk/) account. From the VerifyID dashboard, obtain your **Plugin Key**.
 
 ## Installation
 
@@ -46,12 +36,10 @@ return [
 
 ### Step 3: Configure environment variables
 
-Add the following environment variables to your `.env.local`:
+Add the following environment variable to your `.env.local`:
 
 ```dotenv
-CRIIPTO_CLIENT_ID=your-client-id
-CRIIPTO_CLIENT_SECRET=your-client-secret
-CRIIPTO_VERIFY_DOMAIN=your-tenant.criipto.id
+VERIFYID_PLUGIN_KEY=your-plugin-key
 ```
 
 ### Step 4: Import routes
@@ -148,9 +136,9 @@ bin/console doctrine:migrations:migrate
 
 ## Usage
 
-Once installed, an **Age verification** tab appears on the product edit page in the Sylius admin. Set a minimum age (15, 16, 18, or 21) for any product that requires age verification.
+Once installed, an **Age verification** tab appears on the product edit page in the Sylius admin. Set a minimum age (16 or 18) for any product that requires age verification.
 
-During checkout, if the order contains age-restricted products and the shipping address is in one of the configured `enabled_countries`, the customer will be prompted to verify their age via Criipto before they can complete the order. Once verified, the result is stored on the customer entity and reused for future orders.
+During checkout, if the order contains age-restricted products and the shipping address is in one of the configured `enabled_countries`, the customer will be prompted to verify their age via VerifyID before they can complete the order. Once verified, the result is stored on the customer entity and reused for future orders.
 
 
 

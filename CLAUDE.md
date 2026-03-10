@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Sylius plugin that adds age verification to checkout using [Criipto](https://www.criipto.com/) as the OpenID Connect-based age verification provider. Products can have a minimum age requirement (15, 16, 18, or 21), and customers are verified via Criipto's identity verification before completing checkout.
+Sylius plugin that adds age verification to checkout using [VerifyID](https://verifyid.dk/) as the age verification provider. Products can have a minimum age requirement (16 or 18), and customers are verified via VerifyID before completing checkout.
 
 ## Commands
 
@@ -23,15 +23,18 @@ Sylius plugin that adds age verification to checkout using [Criipto](https://www
 
 ### Namespace: `Setono\SyliusAgeVerificationPlugin`
 
-**OpenID Connect flow with Criipto:**
+**VerifyID age verification flow:**
 1. `Checker/MinimumAgeChecker` — inspects an order's items for the highest `minimumAge` across products, considering the shipping country (only `enabled_countries` trigger verification) and whether the customer was already verified
-2. `UrlGenerator/AuthorizationUrlGenerator` — builds the Criipto authorization URL with the appropriate `is_over_X` scope
-3. `Controller/CriiptoCallbackAction` — handles the OAuth callback, exchanges the authorization code for a token, decodes it, and stores the verification result on the customer
-4. `Token/TokenDecoder` — decodes the JWT ID token using Criipto's JWKS keys, maps it to `DecodedToken` via Valinor
+2. `Controller/InitiateVerificationAction` — generates a device ID, calls VerifyID's `url_generator_s` API to get a verification URL, and redirects the customer to it
+3. `Controller/VerifyIdCallbackAction` — handles the callback from VerifyID, calls the `auth_check` API with the token and device ID, and stores the verified age on the customer
 
 **Model traits (must be applied to Sylius entities by the host application):**
 - `AgeAwareProductTrait` / `AgeAwareProductInterface` — adds `minimumAge` field to Product
 - `AgeAwareCustomerTrait` / `AgeAwareCustomerInterface` — adds `olderThan` and `ageCheckedAt` fields to Customer
+
+**Admin integration:**
+- `Form/Extension/ProductTypeExtension` — adds a `minimumAge` choice field to the product form
+- `EventSubscriber/Admin/AddAgeVerificationTabSubscriber` — adds an age verification tab to the product admin form
 
 **Twig integration:**
 - `Twig/Extension` + `Twig/Runtime` — provides helpers used in the shop checkout template to show the age verification prompt
@@ -39,7 +42,7 @@ Sylius plugin that adds age verification to checkout using [Criipto](https://www
 
 **Configuration (`setono_sylius_age_verification`):**
 - `enabled_countries` (required) — list of country codes where age verification is enforced
-- `criipto.client_id`, `criipto.client_secret`, `criipto.verify_domain` — default to env vars `CRIIPTO_CLIENT_ID`, `CRIIPTO_CLIENT_SECRET`, `CRIIPTO_VERIFY_DOMAIN`
+- `verify_id.plugin_key` — defaults to env var `VERIFYID_PLUGIN_KEY`
 
 ### Service wiring
 

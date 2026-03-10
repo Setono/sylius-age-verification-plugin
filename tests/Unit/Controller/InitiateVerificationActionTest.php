@@ -75,7 +75,7 @@ final class InitiateVerificationActionTest extends TestCase
         self::assertSame('/checkout/complete', $response->getTargetUrl());
     }
 
-    public function testItRedirectsBackWhenNoAgeRestrictedItems(): void
+    public function testItRedirectsToRefererWhenNoAgeRestrictedItems(): void
     {
         $httpClient = new MockHttpClient();
 
@@ -93,7 +93,59 @@ final class InitiateVerificationActionTest extends TestCase
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
-        $request->headers->set('referer', '/checkout/complete');
+        $request->headers->set('referer', '/some-other-page');
+
+        $response = $action($request);
+
+        self::assertSame('/some-other-page', $response->getTargetUrl());
+    }
+
+    public function testItFallsBackToCheckoutCompleteWhenNoReferer(): void
+    {
+        $httpClient = new MockHttpClient();
+
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator->method('generate')->willReturn('/checkout/complete');
+
+        $action = new InitiateVerificationAction(
+            $httpClient,
+            $urlGenerator,
+            $this->createChannelContext(),
+            $this->createCartContext(),
+            $this->createMinimumAgeChecker(null),
+            'test_plugin_key',
+        );
+
+        $request = new Request();
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        $response = $action($request);
+
+        self::assertSame('/checkout/complete', $response->getTargetUrl());
+    }
+
+    public function testItRedirectsBackWhenCartIsNotAnOrder(): void
+    {
+        $httpClient = new MockHttpClient();
+
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator->method('generate')->willReturn('/checkout/complete');
+
+        $cart = $this->createMock(\Sylius\Component\Order\Model\OrderInterface::class);
+        $cartContext = $this->createMock(CartContextInterface::class);
+        $cartContext->method('getCart')->willReturn($cart);
+
+        $action = new InitiateVerificationAction(
+            $httpClient,
+            $urlGenerator,
+            $this->createChannelContext(),
+            $cartContext,
+            $this->createMinimumAgeChecker(null),
+            'test_plugin_key',
+        );
+
+        $request = new Request();
+        $request->setSession(new Session(new MockArraySessionStorage()));
 
         $response = $action($request);
 
