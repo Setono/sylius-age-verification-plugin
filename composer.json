@@ -13,6 +13,7 @@
         "doctrine/persistence": "^3.4",
         "setono/doctrine-orm-trait": "^1.2",
         "sylius/admin-bundle": "^1.0",
+        "sylius/channel": "^1.0",
         "sylius/core": "^1.0",
         "sylius/core-bundle": "^1.0",
         "sylius/order": "^1.0",
