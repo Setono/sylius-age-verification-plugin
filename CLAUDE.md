@@ -49,6 +49,24 @@ Services are defined in `src/Resources/config/services.xml` (not autowired). All
 
 `tests/Application/` contains a full Sylius application used for integration testing and container/schema validation. It includes model overrides (`Customer`, `Product`) that apply the age-aware traits.
 
+**Local dev server:**
+- Start: `(cd tests/Application && symfony serve -d)` — runs on https://127.0.0.1:8000
+- Stop: `(cd tests/Application && symfony server:stop)`
+- Status: `(cd tests/Application && symfony server:status)`
+- Uses PHP FPM 8.1 via the Symfony CLI
+
+**Frontend assets (must be built before the site works):**
+- Use Node 18: `nvm use 18`
+- Install deps: `(cd tests/Application && yarn install)`
+- Dev build: `(cd tests/Application && yarn build)`
+- Prod build: `(cd tests/Application && yarn build:prod)`
+- Watch mode: `(cd tests/Application && yarn watch)`
+
+**Browser testing with Playwright MCP:**
+- The site runs at https://127.0.0.1:8000/en_US/ (self-signed TLS)
+- Use `mcp__playwright__browser_navigate` to open pages
+- Use `mcp__playwright__browser_snapshot` (preferred) or `mcp__playwright__browser_take_screenshot` to inspect the page
+
 ## Code Style
 
 - Uses Sylius Labs coding standard via ECS (`ecs.php` imports `vendor/sylius-labs/coding-standard/ecs.php`)

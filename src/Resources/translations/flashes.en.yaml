@@ -1,0 +1,4 @@
+setono_sylius_age_verification:
+    ui:
+        age_verification_error: An error occurred while trying to verify your age. Please try again.
+        age_verification_success: Your age has been verified. You can now complete your order.

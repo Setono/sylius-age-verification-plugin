@@ -12,6 +12,7 @@
         <service id="Setono\SyliusAgeVerificationPlugin\Controller\InitiateVerificationAction" public="true">
             <argument type="service" id="http_client"/>
             <argument type="service" id="router"/>
+            <argument type="service" id="sylius.context.channel"/>
             <argument>%setono_sylius_age_verification.verify_id.plugin_key%</argument>
         </service>
 

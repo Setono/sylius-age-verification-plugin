@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Webmozart\Assert\Assert;
 
-final class VerifyIdCallbackAction
+final class VerifyIdCallbackAction extends AbstractAction
 {
     use ORMTrait;
 
@@ -43,7 +43,7 @@ final class VerifyIdCallbackAction
         }
 
         $response = $this->httpClient->request('GET', sprintf(
-            'https://api.verifyid.dk/api/auth_check/%s/%s',
+            'https://app.verifyid.dk/api/auth_check/%s/%s',
             $token,
             $deviceId,
         ));
@@ -66,6 +66,8 @@ final class VerifyIdCallbackAction
         $customer->setAgeCheckedAt(new \DateTimeImmutable());
 
         $this->getManager($customer)->flush();
+
+        self::addFlash($request, 'success', 'setono_sylius_age_verification.ui.age_verification_success');
 
         return new RedirectResponse($checkoutCompleteUrl);
     }

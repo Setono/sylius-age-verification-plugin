@@ -14,7 +14,6 @@ use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -59,7 +58,6 @@ final class VerifyIdCallbackActionTest extends TestCase
 
         $response = $action($request);
 
-        self::assertInstanceOf(RedirectResponse::class, $response);
         self::assertSame('/checkout/complete', $response->getTargetUrl());
     }
 
@@ -80,7 +78,6 @@ final class VerifyIdCallbackActionTest extends TestCase
 
         $response = $action($request);
 
-        self::assertInstanceOf(RedirectResponse::class, $response);
         self::assertSame('/checkout/complete', $response->getTargetUrl());
     }
 
@@ -101,7 +98,6 @@ final class VerifyIdCallbackActionTest extends TestCase
 
         $response = $action($request);
 
-        self::assertInstanceOf(RedirectResponse::class, $response);
         self::assertSame('/checkout/complete', $response->getTargetUrl());
     }
 
@@ -125,7 +121,6 @@ final class VerifyIdCallbackActionTest extends TestCase
 
         $response = $action($request);
 
-        self::assertInstanceOf(RedirectResponse::class, $response);
         self::assertSame('/checkout/complete', $response->getTargetUrl());
     }
 }
